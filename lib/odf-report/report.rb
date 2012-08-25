@@ -83,6 +83,18 @@ class Report
     @placeholders
   end
 
+  def fields
+    @file.create(nil)
+    @file.update('content.xml') do |txt|
+      parse_document(txt) do |doc|
+        nodes = doc.xpath('//text:variable-decls')
+        @fields = nodes.children.collect {|c| c.attr('name')}
+      end
+    end
+
+    @fields
+  end
+
 private
 
   def parse_document(txt)
